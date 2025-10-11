@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Complete Task Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i>⏱️</i>
+                    <span>TaskFlow</span>
+                </div>
+                <button class="mobile-menu-btn">☰</button>
+                <nav class="mobile-nav">
+                    <ul>
+                        <li><a href="#" class="nav-link active" data-page="dashboard">Dashboard</a></li>
+                        <li><a href="#" class="nav-link" data-page="tasks">Task Manager</a></li>
+                        <li><a href="#" class="nav-link" data-page="calendar">Calendar</a></li>
+                        <li><a href="#" class="nav-link" data-page="reports">Reports</a></li>
+                        <li><a href="#" class="nav-link" data-page="settings">Settings</a></li>
+                        <li><a href="#" class="nav-link" data-page="profile">Profile</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container">
+        <!-- Dashboard Page -->
+        <section id="dashboard" class="page active">
+            <div class="page-header">
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-subtitle">Overview of your productivity and tasks</p>
+            </div>
+
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <i>📊</i>
+                    <div class="stat-value" id="totalTasks">0</div>
+                    <div class="stat-label">Total Tasks</div>
+                </div>
+                <div class="stat-card">
+                    <i>⏱️</i>
+                    <div class="stat-value" id="totalTime">0h</div>
+                    <div class="stat-label">Time Tracked</div>
+                </div>
+                <div class="stat-card">
+                    <i>✅</i>
+                    <div class="stat-value" id="completedTasks">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-card">
+                    <i>🔥</i>
+                    <div class="stat-value" id="productivityScore">0%</div>
+                    <div class="stat-label">Productivity</div>
+                </div>
+            </div>
+
+            <div class="recent-tasks">
+                <h2>Recent Tasks</h2>
+                <div id="recentTasksList">
+                    <div class="empty-state">
+                        <i>📝</i>
+                        <h3>No tasks yet</h3>
+                        <p>Get started by creating your first task!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Task Manager Page -->
+        <section id="tasks" class="page">
+            <div class="page-header">
+                <h1 class="page-title">Task Manager</h1>
+                <p class="page-subtitle">Create, track, and manage your tasks</p>
+            </div>
+
+            <div class="app-container">
+                <div class="task-form">
+                    <h2>Add New Task</h2>
+                    <form id="taskForm">
+                        <div class="form-group">
+                            <label for="taskTitle">Task Title *</label>
+                            <input type="text" id="taskTitle" placeholder="Enter task title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskDescription">Description</label>
+                            <textarea id="taskDescription" rows="3" placeholder="Enter task description (optional)"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskCategory">Category</label>
+                            <select id="taskCategory">
+                                <option value="work">Work</option>
+                                <option value="personal">Personal</option>
+                                <option value="health">Health & Fitness</option>
+                                <option value="learning">Learning</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskPriority">Priority</label>
+                            <select id="taskPriority">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskDueDate">Due Date</label>
+                            <input type="date" id="taskDueDate">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Task</button>
+                    </form>
+
+                    <div id="activeTaskContainer" style="display: none;">
+                        <div class="active-task">
+                            <div class="active-task-info" id="activeTaskTitle"></div>
+                            <div class="active-task-timer" id="activeTaskTimer">00:00:00</div>
+                        </div>
+                        <div class="task-actions">
+                            <button id="pauseTimer" class="btn btn-warning">Pause</button>
+                            <button id="stopTimer" class="btn btn-danger">Stop</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-list">
+                    <div class="task-list-header">
+                        <h2>Your Tasks</h2>
+                        <span id="taskCount">0 tasks</span>
+                    </div>
+
+                    <div id="tasksContainer">
+                        <div class="empty-state">
+                            <i>📝</i>
+                            <h3>No tasks yet</h3>
+                            <p>Add your first task to get started!</p>
+                        </div>
+                    </div>
+
+                    <div class="stats">
+                        <span>Total time tracked: <span id="totalTimeTracked">0h 0m</span></span>
+                        <span id="completedTasksCount">0 completed</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calendar Page -->
+        <section id="calendar" class="page">
+            <div class="page-header">
+                <h1 class="page-title">Calendar</h1>
+                <p class="page-subtitle">View and schedule your tasks</p>
+            </div>
+
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <h2 id="calendarMonthYear">Month Year</h2>
+                    <div class="calendar-nav">
+                        <button id="prevMonth" class="btn btn-secondary">‹</button>
+                        <button id="todayBtn" class="btn btn-primary">Today</button>
+                        <button id="nextMonth" class="btn btn-secondary">›</button>
+                    </div>
+                </div>
+
+                <div class="calendar-view-options">
+                    <div class="view-option active" data-view="month">Month</div>
+                    <div class="view-option" data-view="week">Week</div>
+                    <div class="view-option" data-view="day">Day</div>
+                </div>
+
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Calendar will be generated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Reports Page -->
+        <section id="reports" class="page">
+            <div class="page-header">
+                <h1 class="page-title">Reports & Analytics</h1>
+                <p class="page-subtitle">Track your productivity and time usage</p>
+            </div>
+
+            <div class="reports-container">
+                <div class="filters">
+                    <h2>Filters</h2>
+                    <div class="form-group">
+                        <label for="reportPeriod">Time Period</label>
+                        <select id="reportPeriod">
+                            <option value="week">This Week</option>
+                            <option value="month" selected>This Month</option>
+                            <option value="quarter">This Quarter</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reportCategory">Category</label>
+                        <select id="reportCategory">
+                            <option value="all">All Categories</option>
+                            <option value="work">Work</option>
+                            <option value="personal">Personal</option>
+                            <option value="health">Health & Fitness</option>
+                            <option value="learning">Learning</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary">Generate Report</button>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-placeholder">
+                        <i>📈</i>
+                        <h3>Productivity Report</h3>
+                        <p>Select filters and generate report to view analytics</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-cards" style="margin-top: 30px;">
+                <div class="stat-card">
+                    <i>📅</i>
+                    <div class="stat-value" id="reportTasks">0</div>
+                    <div class="stat-label">Tasks This Month</div>
+                </div>
+                <div class="stat-card">
+                    <i>⏱️</i>
+                    <div class="stat-value" id="reportTime">0h</div>
+                    <div class="stat-label">Time This Month</div>
+                </div>
+                <div class="stat-card">
+                    <i>✅</i>
+                    <div class="stat-value" id="reportCompleted">0</div>
+                    <div class="stat-label">Completed This Month</div>
+                </div>
+                <div class="stat-card">
+                    <i>📊</i>
+                    <div class="stat-value" id="reportProductivity">0%</div>
+                    <div class="stat-label">Monthly Productivity</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Page -->
+        <section id="settings" class="page">
+            <div class="page-header">
+                <h1 class="page-title">Settings</h1>
+                <p class="page-subtitle">Customize your TaskFlow experience</p>
+            </div>
+
+            <div class="settings-container">
+                <div class="settings-card">
+                    <h2 class="settings-title">General Settings</h2>
+                    <div class="settings-group">
+                        <label for="theme">Theme</label>
+                        <select id="theme">
+                            <option value="light" selected>Light</option>
+                            <option value="dark">Dark</option>
+                            <option value="auto">Auto (System)</option>
+                        </select>
+                    </div>
+                    <div class="settings-group">
+                        <label for="language">Language</label>
+                        <select id="language">
+                            <option value="en" selected>English</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                        </select>
+                    </div>
+                    <div class="settings-group">
+                        <label for="timeFormat">Time Format</label>
+                        <select id="timeFormat">
+                            <option value="12" selected>12-hour</option>
+                            <option value="24">24-hour</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h2 class="settings-title">Notifications</h2>
+                    <div class="settings-group">
+                        <label>
+                            <input type="checkbox" id="emailNotifications" checked>
+                            Email Notifications
+                        </label>
+                    </div>
+                    <div class="settings-group">
+                        <label>
+                            <input type="checkbox" id="pushNotifications" checked>
+                            Push Notifications
+                        </label>
+                    </div>
+                    <div class="settings-group">
+                        <label>
+                            <input type="checkbox" id="taskReminders">
+                            Task Reminders
+                        </label>
+                    </div>
+                    <div class="settings-group">
+                        <label for="reminderTime">Reminder Time</label>
+                        <select id="reminderTime">
+                            <option value="15">15 minutes before</option>
+                            <option value="30" selected>30 minutes before</option>
+                            <option value="60">1 hour before</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-card" style="margin-top: 20px;">
+                <h2 class="settings-title">Data Management</h2>
+                <div class="settings-group">
+                    <button class="btn btn-primary">Export Data</button>
+                    <button class="btn btn-secondary">Import Data</button>
+                    <button class="btn btn-danger">Clear All Data</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Page -->
+        <section id="profile" class="page">
+            <div class="page-header">
+                <h1 class="page-title">Your Profile</h1>
+                <p class="page-subtitle">Manage your account and personal information</p>
+            </div>
+
+            <div class="profile-container">
+                <div class="profile-sidebar">
+                    <div class="profile-pic">
+                        <i>👤</i>
+                    </div>
+                    <div class="profile-name" id="profileName">User Name</div>
+                    <div class="profile-role" id="profileRole">Task Manager</div>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <strong id="profileTasks">0</strong> Tasks
+                        </div>
+                        <div class="stat-item">
+                            <strong id="profileTime">0h</strong> Tracked
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-details">
+                    <h2>Personal Information</h2>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label for="profileFirstName">First Name</label>
+                            <input type="text" id="profileFirstName" value="John">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileLastName">Last Name</label>
+                            <input type="text" id="profileLastName" value="Doe">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileEmail">Email</label>
+                            <input type="email" id="profileEmail" value="john.doe@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileBio">Bio</label>
+                            <textarea id="profileBio" rows="3">Productivity enthusiast and task management expert.</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </form>
+
+                    <h2 style="margin-top: 30px;">Change Password</h2>
+                    <form id="passwordForm">
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input type="password" id="confirmPassword">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Change Password</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Task Detail Modal -->
+    <div class="modal" id="taskDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Task Details</h3>
+                <button class="modal-close" id="closeTaskModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="taskDetailContent">
+                    <!-- Task details will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TaskFlow</h3>
+                    <p>The complete task management solution to boost your productivity and organize your work.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#" class="nav-link" data-page="dashboard">Dashboard</a></li>
+                        <li><a href="#" class="nav-link" data-page="tasks">Task Manager</a></li>
+                        <li><a href="#" class="nav-link" data-page="calendar">Calendar</a></li>
+                        <li><a href="#" class="nav-link" data-page="reports">Reports</a></li>
+                        <li><a href="#" class="nav-link" data-page="settings">Settings</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 TaskFlow. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="functions.js"></script>
+</body>
+</html>
